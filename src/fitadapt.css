@@ -1,0 +1,945 @@
+/* ==========================================================================
+   FitAdapt UI — plain CSS component styles.
+   Colors, gradients and fonts come from the tokens in styles.css (:root).
+   ========================================================================== */
+
+.fa-app {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+.fa-screen {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 2.25rem 1.25rem 3rem;
+  isolation: isolate;
+}
+
+.fa-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 520px;
+  background-image: var(--gradient-hero);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .fa-screen {
+    padding-top: 3.5rem;
+  }
+}
+
+/* ── Type ─────────────────────────────────────────────── */
+
+.fa-eyebrow {
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  margin: 0 0 0.75rem;
+}
+
+.fa-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 11vw, 3.4rem);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.fa-title--md {
+  font-size: 2.4rem;
+}
+
+.fa-lead {
+  color: var(--muted-foreground);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  margin: 1rem 0 0;
+}
+
+.fa-sub {
+  color: var(--muted-foreground);
+  font-size: 0.92rem;
+  margin: 0.35rem 0 0;
+}
+
+.fa-h2 {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 0 0 0.9rem;
+  line-height: 1;
+}
+
+.fa-accent {
+  color: var(--primary);
+}
+
+.fa-warn {
+  color: var(--warning);
+}
+
+.fa-muted {
+  color: var(--muted-foreground);
+}
+
+/* ── Step indicator ───────────────────────────────────── */
+
+.fa-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin: 2rem 0 1.5rem;
+}
+
+.fa-step {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.fa-step::before {
+  content: "";
+  display: block;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--border);
+  margin-bottom: 0.55rem;
+}
+
+.fa-step.is-done {
+  color: var(--primary);
+}
+
+.fa-step.is-done::before {
+  background-image: var(--gradient-primary);
+}
+
+/* ── Cards ───────────────────────────────────────────── */
+
+.fa-card {
+  background: color-mix(in oklab, var(--card) 92%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  border-radius: 1.25rem;
+  padding: 1.4rem 1.3rem;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(6px);
+}
+
+.fa-card + .fa-card {
+  margin-top: 0.9rem;
+}
+
+.fa-card--inset {
+  background: var(--surface);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: none;
+}
+
+.fa-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Options (single choice) ─────────────────────────── */
+
+.fa-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: color-mix(in oklab, var(--surface) 60%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 1rem 1.1rem;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  font: inherit;
+}
+
+.fa-option:hover {
+  border-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+}
+
+.fa-option.is-selected {
+  border-color: var(--primary);
+  background: var(--surface);
+  box-shadow: var(--shadow-glow);
+}
+
+.fa-option-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.fa-option-sub {
+  display: block;
+  color: var(--muted-foreground);
+  font-size: 0.88rem;
+  margin-top: 0.4rem;
+}
+
+.fa-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 1.25rem 0 0.6rem;
+}
+
+/* ── Chips (multi choice) ────────────────────────────── */
+
+.fa-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fa-chip {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted-foreground);
+  border-radius: 99px;
+  padding: 0.55rem 1rem;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.fa-chip:hover {
+  color: var(--foreground);
+  border-color: color-mix(in oklab, var(--primary) 40%, var(--border));
+}
+
+.fa-chip.is-on {
+  background-image: var(--gradient-primary);
+  color: var(--primary-foreground);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+/* ── Buttons ─────────────────────────────────────────── */
+
+.fa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.8rem;
+  padding: 0.8rem 1.3rem;
+  font: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.1s, filter 0.15s, background 0.15s, border-color 0.15s;
+  color: var(--foreground);
+  background: transparent;
+}
+
+.fa-btn:active {
+  transform: scale(0.97);
+}
+
+.fa-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.fa-btn svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.fa-btn--primary {
+  background-image: var(--gradient-primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 8px 24px -10px color-mix(in oklab, var(--primary) 70%, transparent);
+}
+
+.fa-btn--primary:hover {
+  filter: brightness(1.06);
+}
+
+.fa-btn--outline {
+  border-color: var(--border);
+  background: color-mix(in oklab, var(--card) 70%, transparent);
+}
+
+.fa-btn--outline:hover {
+  border-color: color-mix(in oklab, var(--primary) 50%, var(--border));
+}
+
+.fa-btn--ghost {
+  color: var(--muted-foreground);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.fa-btn--ghost:hover {
+  color: var(--foreground);
+}
+
+.fa-btn--sm {
+  padding: 0.45rem 0.8rem;
+  font-size: 0.82rem;
+  border-radius: 0.65rem;
+}
+
+.fa-btn--block {
+  width: 100%;
+}
+
+.fa-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.6rem;
+}
+
+.fa-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.fa-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--muted-foreground);
+  background: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+}
+
+.fa-back:hover {
+  color: var(--foreground);
+}
+
+/* ── Sliders & inputs ────────────────────────────────── */
+
+.fa-slider {
+  margin-top: 1.2rem;
+}
+
+.fa-slider-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+
+.fa-slider-head span:first-child {
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+}
+
+.fa-slider-value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.fa-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--primary) var(--fill, 50%), var(--border) var(--fill, 50%));
+  outline: none;
+  cursor: pointer;
+}
+
+.fa-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 25%, transparent);
+}
+
+.fa-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.fa-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.fa-field span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin-bottom: 0.35rem;
+}
+
+.fa-input {
+  width: 100%;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  padding: 0.7rem 0.75rem;
+  color: var(--foreground);
+  font: inherit;
+}
+
+.fa-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* ── Stats ───────────────────────────────────────────── */
+
+.fa-stats {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.fa-stats--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.fa-stat {
+  background: color-mix(in oklab, var(--card) 92%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+}
+
+.fa-stat-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.fa-stat-label svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.fa-stat-value {
+  font-family: var(--font-display);
+  font-size: 2.3rem;
+  color: var(--primary);
+  line-height: 1;
+  margin-top: 0.4rem;
+}
+
+.fa-stat-value small {
+  font-size: 1rem;
+  color: var(--muted-foreground);
+}
+
+.fa-stats--3 .fa-stat {
+  text-align: center;
+  padding: 0.9rem 0.5rem;
+}
+
+.fa-stats--3 .fa-stat-label {
+  justify-content: center;
+}
+
+/* ── Exercise cards ──────────────────────────────────── */
+
+.fa-ex {
+  background: color-mix(in oklab, var(--card) 94%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+  border-radius: 1.1rem;
+  padding: 1.15rem 1.15rem 1rem;
+}
+
+.fa-ex + .fa-ex {
+  margin-top: 0.75rem;
+}
+
+.fa-ex-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.fa-ex-name {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+}
+
+.fa-ex-meta {
+  color: var(--muted-foreground);
+  font-size: 0.9rem;
+  margin-top: 0.35rem;
+}
+
+.fa-ex-cue {
+  color: color-mix(in oklab, var(--muted-foreground) 85%, var(--background));
+  font-size: 0.9rem;
+  margin: 0.55rem 0 0.8rem;
+}
+
+.fa-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  border: 1px solid color-mix(in oklab, var(--primary) 35%, transparent);
+  border-radius: 99px;
+  padding: 0.2rem 0.55rem;
+  white-space: nowrap;
+}
+
+.fa-tag svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.fa-alts {
+  margin-top: 0.8rem;
+  background: var(--surface);
+  border-radius: 0.95rem;
+  padding: 0.95rem;
+}
+
+.fa-alts-head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.fa-alts-head svg {
+  color: var(--primary);
+  width: 1rem;
+  height: 1rem;
+}
+
+.fa-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.55rem 0 0.75rem;
+  font-size: 0.82rem;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+
+.fa-check input {
+  accent-color: var(--primary);
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.fa-alt {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  color: var(--foreground);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.fa-alt + .fa-alt {
+  margin-top: 0.45rem;
+}
+
+.fa-alt:hover {
+  border-color: var(--primary);
+}
+
+.fa-alt-name {
+  font-weight: 600;
+}
+
+.fa-alt-meta {
+  display: block;
+  color: var(--muted-foreground);
+  font-size: 0.76rem;
+  margin-top: 0.15rem;
+}
+
+.fa-score {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.fa-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  margin-top: 0.6rem;
+}
+
+.fa-matrix th,
+.fa-matrix td {
+  padding: 0.4rem 0.3rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.fa-matrix th:first-child,
+.fa-matrix td:first-child {
+  text-align: left;
+}
+
+.fa-matrix th {
+  color: var(--muted-foreground);
+  font-weight: 600;
+}
+
+.fa-sticky {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0 0.25rem;
+  margin-top: 1rem;
+  background: linear-gradient(180deg, transparent, var(--background) 35%);
+}
+
+/* ── Session ─────────────────────────────────────────── */
+
+.fa-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.fa-counter {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.fa-camera {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+  margin-top: 1.2rem;
+}
+
+.fa-camera video,
+.fa-camera canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.fa-camera-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--muted-foreground);
+  font-size: 0.9rem;
+}
+
+.fa-camera-empty svg {
+  width: 2rem;
+  height: 2rem;
+  color: var(--primary);
+}
+
+.fa-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: color-mix(in oklab, var(--background) 80%, transparent);
+  border-radius: 99px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.fa-badge--right {
+  left: auto;
+  right: 0.75rem;
+}
+
+.fa-dot {
+  position: relative;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--destructive);
+}
+
+.fa-dot.is-live {
+  background: var(--primary);
+}
+
+.fa-dot.is-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+
+.fa-bar {
+  height: 6px;
+  border-radius: 99px;
+  background: var(--border);
+  overflow: hidden;
+  margin: 0.25rem 0 1rem;
+}
+
+.fa-bar > span {
+  display: block;
+  height: 100%;
+  background-image: var(--gradient-primary);
+  transition: width 0.3s;
+}
+
+.fa-rest {
+  text-align: center;
+  padding: 2rem 1.2rem;
+  margin-top: 1rem;
+}
+
+.fa-rest svg {
+  width: 2rem;
+  height: 2rem;
+  color: var(--primary);
+}
+
+.fa-rest-label {
+  letter-spacing: 0.22em;
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+  margin-top: 0.5rem;
+}
+
+.fa-rest-num {
+  font-family: var(--font-display);
+  font-size: 6rem;
+  line-height: 1;
+  color: var(--primary);
+  margin: 0.3rem 0 0.8rem;
+}
+
+.fa-note {
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+  margin-top: 0.75rem;
+}
+
+/* ── Feedback & progress ─────────────────────────────── */
+
+.fa-feel {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+  padding: 0.95rem 1rem;
+  color: var(--foreground);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fa-feel + .fa-feel {
+  margin-top: 0.6rem;
+}
+
+.fa-feel:hover {
+  border-color: var(--primary);
+}
+
+.fa-decision {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.fa-decision-icon {
+  flex: none;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.7rem;
+  display: grid;
+  place-items: center;
+  background: color-mix(in oklab, var(--primary) 18%, transparent);
+  color: var(--primary);
+}
+
+.fa-decision-icon.is-down {
+  background: color-mix(in oklab, var(--warning) 18%, transparent);
+  color: var(--warning);
+}
+
+.fa-list {
+  margin: 0.6rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--muted-foreground);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.fa-log-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.fa-log-date {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.fa-log-rows {
+  margin-top: 0.75rem;
+  font-size: 0.86rem;
+}
+
+.fa-log-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  color: var(--muted-foreground);
+}
+
+.fa-chart {
+  height: 220px;
+}
+
+.fa-empty {
+  text-align: center;
+  color: var(--muted-foreground);
+  padding: 2rem 1rem;
+}
+
+.fa-footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+
+.fa-footer a {
+  color: var(--primary);
+}
+
+.fa-hist {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 70px;
+  margin-top: 0.6rem;
+}
+
+.fa-hist span {
+  flex: 1;
+  background-image: var(--gradient-primary);
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+}
+
+.fa-hist-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--muted-foreground);
+  margin-top: 0.3rem;
+}
+
+.fa-kv {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem 1rem;
+  font-size: 0.82rem;
+  margin-top: 0.8rem;
+}
+
+.fa-kv dt {
+  color: var(--muted-foreground);
+}
+
+.fa-kv dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+}

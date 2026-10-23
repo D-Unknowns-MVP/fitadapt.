@@ -1,6 +1,7 @@
 # FitAdapt roadmap
 
 - [ ] Design system + fonts (dark / lime, Bebas Neue + Barlow)
+- [ ] UI styled mainly with plain CSS classes (user request), not utility classes
 - [ ] Exercise database + TOPSIS ranking (C1–C6) + alternatives
 - [ ] Onboarding wizard (Goal, Where, Gear, You)
 - [ ] Plan overview with "Can't do this" TOPSIS alternatives

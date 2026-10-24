@@ -52,9 +52,9 @@ const SIDES = {
 export function jointAngles(lm: Point[]): { angles: number[]; visibility: number } | null {
   if (!lm || lm.length < 33) return null;
   const vis = (s: typeof SIDES.left) =>
-    Object.values(s).reduce((a, i) => a + (lm[i].visibility ?? 1), 0) / Object.values(s).length;
+    Object.values(s).reduce((a, i) => a + (lm[i]!.visibility ?? 1), 0) / Object.values(s).length;
   const side = vis(SIDES.left) >= vis(SIDES.right) ? SIDES.left : SIDES.right;
-  const p = (i: number) => lm[i];
+  const p = (i: number) => lm[i]!;
   return {
     visibility: vis(side),
     angles: [
@@ -70,13 +70,13 @@ export function jointAngles(lm: Point[]): { angles: number[]; visibility: number
 export function classify(angles: number[], k = 7): { key: PoseKey; confidence: number } {
   const dists = POSE_REF.samples.map((s) => {
     let d = 0;
-    for (let j = 0; j < 5; j++) d += (s[j] - angles[j]) ** 2;
+    for (let j = 0; j < 5; j++) d += ((s[j] as number) - (angles[j] ?? 0)) ** 2;
     return { d, key: s[5] };
   });
   dists.sort((a, b) => a.d - b.d);
   const votes = new Map<PoseKey, number>();
   for (const n of dists.slice(0, k)) votes.set(n.key, (votes.get(n.key) ?? 0) + 1);
-  let best: PoseKey = dists[0].key;
+  let best: PoseKey = dists[0]!.key;
   let bestV = 0;
   for (const [key, v] of votes) if (v > bestV) [best, bestV] = [key, v];
   return { key: best, confidence: bestV / k };
@@ -85,7 +85,10 @@ export function classify(angles: number[], k = 7): { key: PoseKey; confidence: n
 /** True when every joint sits inside the dataset's 5th–95th percentile band for that exercise. */
 export function withinBand(key: PoseKey, angles: number[], tolerance = 10): boolean {
   const q = POSE_REF.labels[key].quantiles;
-  return JOINTS.every((j, i) => angles[i] >= q[j][0] - tolerance && angles[i] <= q[j][4] + tolerance);
+  return JOINTS.every((j, i) => {
+    const a = angles[i] ?? 0;
+    return a >= q[j][0]! - tolerance && a <= q[j][4]! + tolerance;
+  });
 }
 
 export interface RepEvent {
@@ -116,7 +119,7 @@ export class RepCounter {
 
   /** Feed one frame of joint angles; returns a RepEvent when a repetition completes. */
   push(angles: number[], formFrame?: boolean): RepEvent | null {
-    const a = angles[this.jointIndex];
+    const a = angles[this.jointIndex] ?? 0;
     const { low, high } = this.ref.thresholds;
     const zone = a <= low ? "low" : a >= high ? "high" : "mid";
 

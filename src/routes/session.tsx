@@ -219,7 +219,7 @@ function SessionPage() {
 
   if (!item || !ex) return <Loading />;
   const isHold = ex.kind === "hold";
-  const lastRom = roms.length ? roms[roms.length - 1] : null;
+  const lastRom = roms[roms.length - 1] ?? null;
 
   return (
     <Screen>
@@ -260,8 +260,8 @@ function SessionPage() {
           <div className="fa-rest-label">REST</div>
           <div className="fa-rest-num">{rest}</div>
           <p className="fa-sub" style={{ marginBottom: "1.2rem" }}>
-            Next: {findExercise(catalog, items[exIdx].exerciseId)?.name} · set {setNo} of {items[exIdx].sets} —{" "}
-            {items[exIdx].target} {isHold ? "seconds" : "reps"}
+            Next: {ex.name} · set {setNo} of {item.sets} —{" "}
+            {item.target} {isHold ? "seconds" : "reps"}
           </p>
           <button type="button" className="fa-btn fa-btn--primary" onClick={() => setRest(0)}>
             <SkipForward /> Skip rest

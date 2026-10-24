@@ -34,10 +34,10 @@ describe("TOPSIS", () => {
       ],
       [1, 1, 1],
     );
-    expect(r[0].closeness).toBe(1);
-    expect(r[2].closeness).toBe(0);
-    expect(r[1].closeness).toBeGreaterThan(0);
-    expect(r[1].closeness).toBeLessThan(1);
+    expect(r[0]!.closeness).toBe(1);
+    expect(r[2]!.closeness).toBe(0);
+    expect(r[1]!.closeness).toBeGreaterThan(0);
+    expect(r[1]!.closeness).toBeLessThan(1);
   });
 });
 

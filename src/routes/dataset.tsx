@@ -74,7 +74,7 @@ function DatasetPage() {
                 <div key={j} style={{ display: "contents" }}>
                   <dt>{j} (5th–95th pct)</dt>
                   <dd>
-                    {Math.round(ref.quantiles[j][0])}°–{Math.round(ref.quantiles[j][4])}°
+                    {Math.round(ref.quantiles[j][0]!)}°–{Math.round(ref.quantiles[j][4]!)}°
                   </dd>
                 </div>
               ))}

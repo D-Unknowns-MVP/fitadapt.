@@ -92,13 +92,13 @@ export function PoseTracker({ poseKey, resetKey, paused, onRep }: Props) {
               ctx.lineWidth = 4;
               for (const [a, b] of BONES) {
                 ctx.beginPath();
-                ctx.moveTo(lm[a].x * canvas.width, lm[a].y * canvas.height);
-                ctx.lineTo(lm[b].x * canvas.width, lm[b].y * canvas.height);
+                ctx.moveTo(lm[a]!.x * canvas.width, lm[a]!.y * canvas.height);
+                ctx.lineTo(lm[b]!.x * canvas.width, lm[b]!.y * canvas.height);
                 ctx.stroke();
               }
               for (const i of [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28]) {
                 ctx.beginPath();
-                ctx.arc(lm[i].x * canvas.width, lm[i].y * canvas.height, 5, 0, Math.PI * 2);
+                ctx.arc(lm[i]!.x * canvas.width, lm[i]!.y * canvas.height, 5, 0, Math.PI * 2);
                 ctx.fill();
               }
             }

@@ -1,4 +1,4 @@
-# Dataset Explorer
+# FitAdapt
 
 create this app. and make sure to use the dataset in zip
 

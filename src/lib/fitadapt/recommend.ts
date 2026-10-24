@@ -148,7 +148,12 @@ export function alternatives(
       pool.filter((ex) => ex.muscle !== original.muscle && ex.secondary.includes(original.muscle)),
     );
   }
-  return rank(candidates, ctx, original.muscle).slice(0, 4);
+  // Rank against every feasible exercise so closeness scores are absolute, not relative to a tiny pool.
+  const ids = new Set(candidates.map((c) => c.id));
+  const universe = catalog.filter((ex) => isFeasible(ex, ctx.profile));
+  return rank(universe, ctx, original.muscle)
+    .filter((r) => ids.has(r.exercise.id))
+    .slice(0, 4);
 }
 
 export function planTitle(profile: Profile) {

@@ -63,9 +63,9 @@ export function criteriaScores(ex: Exercise, ctx: Context, muscleOverride?: Musc
 
   let c6 = 3;
   if (cantDo.includes(ex.id)) c6 = 1;
-  else if (stats[ex.id]) {
+  else {
     const s = stats[ex.id];
-    c6 = 1 + 4 * (0.5 * s.completion + 0.25 * s.rom + 0.25 * s.form);
+    if (s) c6 = 1 + 4 * (0.5 * s.completion + 0.25 * s.rom + 0.25 * s.form);
   }
   return [c1, c2, c3, c4, c5, c6];
 }
@@ -74,7 +74,7 @@ export function rank(candidates: Exercise[], ctx: Context, muscleOverride?: Musc
   const criteria = ctx.criteria ?? CRITERIA;
   const matrix = candidates.map((ex) => criteriaScores(ex, ctx, muscleOverride));
   return topsis(matrix, criteria.map((c) => c.weight))
-    .map((r) => ({ exercise: candidates[r.index], scores: matrix[r.index], closeness: r.closeness }))
+    .map((r) => ({ exercise: candidates[r.index]!, scores: matrix[r.index]!, closeness: r.closeness }))
     .sort((a, b) => b.closeness - a.closeness);
 }
 

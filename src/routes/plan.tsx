@@ -217,7 +217,10 @@ function PlanPage() {
               ))}
             </dl>
             <p className="fa-note">
-              Catalog source: {catalog.source === "mysql" ? "MySQL database" : "built-in exercise database"}
+              Exercises and criteria come from the FitAdapt MySQL database design.{" "}
+              <a className="fa-accent" href="/fitadapt_mysql.sql" download>
+                Download the MySQL file
+              </a>
             </p>
           </>
         )}

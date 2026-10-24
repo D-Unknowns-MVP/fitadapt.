@@ -10,5 +10,5 @@
 - [x] Progress dashboard + session log
 - [x] Dataset page (exercise_angles.csv insights)
 - [x] MySQL schema + seed for exercises and criteria (database/fitadapt_mysql.sql)
-- [ ] Connect the app to a live MySQL server — waiting on which MySQL host the user has + its connection details
+- [x] MySQL runs locally (XAMPP / Workbench) per user; setup file verified importing into MariaDB, downloadable from the plan page
 - [x] Tests for TOPSIS, adaptation rules, rep counting

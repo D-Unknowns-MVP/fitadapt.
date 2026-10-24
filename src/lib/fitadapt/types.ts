@@ -52,9 +52,9 @@ export interface Profile {
   experience: 1 | 2 | 3;
   sessionMinutes: number;
   daysPerWeek: number;
-  age?: number;
-  heightCm?: number;
-  weightKg?: number;
+  age?: number | undefined;
+  heightCm?: number | undefined;
+  weightKg?: number | undefined;
 }
 
 export interface PlanItem {

@@ -10,11 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DatasetRouteImport } from './routes/dataset'
 import { Route as PlanRouteImport } from './routes/plan'
+import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as SessionRouteImport } from './routes/session'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DatasetRoute = DatasetRouteImport.update({
+  id: '/dataset',
+  path: '/dataset',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlanRoute = PlanRouteImport.update({
@@ -22,31 +30,53 @@ const PlanRoute = PlanRouteImport.update({
   path: '/plan',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionRoute = SessionRouteImport.update({
+  id: '/session',
+  path: '/session',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dataset': typeof DatasetRoute
   '/plan': typeof PlanRoute
+  '/progress': typeof ProgressRoute
+  '/session': typeof SessionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dataset': typeof DatasetRoute
   '/plan': typeof PlanRoute
+  '/progress': typeof ProgressRoute
+  '/session': typeof SessionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dataset': typeof DatasetRoute
   '/plan': typeof PlanRoute
+  '/progress': typeof ProgressRoute
+  '/session': typeof SessionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/plan'
+  fullPaths: '/' | '/dataset' | '/plan' | '/progress' | '/session'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/plan'
-  id: '__root__' | '/' | '/plan'
+  to: '/' | '/dataset' | '/plan' | '/progress' | '/session'
+  id: '__root__' | '/' | '/dataset' | '/plan' | '/progress' | '/session'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DatasetRoute: typeof DatasetRoute
   PlanRoute: typeof PlanRoute
+  ProgressRoute: typeof ProgressRoute
+  SessionRoute: typeof SessionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +88,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dataset': {
+      id: '/dataset'
+      path: '/dataset'
+      fullPath: '/dataset'
+      preLoaderRoute: typeof DatasetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/plan': {
       id: '/plan'
       path: '/plan'
@@ -65,12 +102,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/session': {
+      id: '/session'
+      path: '/session'
+      fullPath: '/session'
+      preLoaderRoute: typeof SessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DatasetRoute: DatasetRoute,
   PlanRoute: PlanRoute,
+  ProgressRoute: ProgressRoute,
+  SessionRoute: SessionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

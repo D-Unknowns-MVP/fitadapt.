@@ -195,7 +195,7 @@ function Onboarding() {
             <h2 className="fa-h2">A little about you</h2>
             <RangeRow
               label="Experience level"
-              value={EXPERIENCE[experience - 1]}
+              value={EXPERIENCE[experience - 1] ?? ""}
               min={1}
               max={3}
               current={experience}

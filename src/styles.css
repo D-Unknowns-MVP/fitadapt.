@@ -103,7 +103,7 @@
   --gradient-hero:
     radial-gradient(120% 60% at 0% 0%, oklch(0.32 0.06 30 / 0.85), transparent 60%),
     radial-gradient(110% 60% at 100% 0%, oklch(0.42 0.12 130 / 0.75), transparent 62%),
-    linear-gradient(180deg, transparent 40%, oklch(0.13 0.01 250) 100%);
+    linear-gradient(180deg, transparent 40%, var(--background) 100%);
   --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--primary) 70%, transparent),
     0 0 24px -4px color-mix(in oklab, var(--primary) 45%, transparent);
   --shadow-card: 0 18px 40px -24px oklch(0 0 0 / 0.8);

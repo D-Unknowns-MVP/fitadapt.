@@ -111,4 +111,5 @@ lines.push(goals.join(",\n") + ";\n");
 
 mkdirSync("database", { recursive: true });
 writeFileSync("database/fitadapt_mysql.sql", lines.join("\n"));
+writeFileSync("public/fitadapt_mysql.sql", lines.join("\n"));
 console.log(`Wrote database/fitadapt_mysql.sql (${EXERCISES.length} exercises, ${CRITERIA.length} criteria)`);

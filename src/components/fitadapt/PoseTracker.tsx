@@ -1,7 +1,7 @@
 import { CameraOff, Video } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { POSE_REF, RepCounter, classify, jointAngles, withinBand, type RepEvent } from "@/lib/fitadapt/pose";
+import { RepCounter, jointAngles, withinBand, type RepEvent } from "@/lib/fitadapt/pose";
 import type { PoseKey } from "@/lib/fitadapt/types";
 
 const WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.1/wasm";
@@ -25,7 +25,7 @@ type Status = "idle" | "loading" | "live" | "error";
 
 /**
  * Camera + MediaPipe Pose. Frames are processed on the device only — nothing is uploaded.
- * Joint angles are matched against the Exercise Detection Dataset for recognition, reps and ROM.
+ * The exercise is supplied by the workout plan; the camera tracks movement for that assigned exercise only.
  */
 export function PoseTracker({ poseKey, resetKey, paused, onRep }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -36,7 +36,6 @@ export function PoseTracker({ poseKey, resetKey, paused, onRep }: Props) {
   const [enabled, setEnabled] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [inFrame, setInFrame] = useState(false);
-  const [detected, setDetected] = useState<{ label: string; confidence: number } | null>(null);
   const [error, setError] = useState("");
 
   onRepRef.current = onRep;
@@ -105,10 +104,6 @@ export function PoseTracker({ poseKey, resetKey, paused, onRep }: Props) {
             if (ja && visible && !pausedRef.current && counterRef.current) {
               const event = counterRef.current.push(ja.angles, withinBand(poseKey, ja.angles));
               if (event) onRepRef.current(event);
-              if (frame % 10 === 0) {
-                const c = classify(ja.angles);
-                setDetected({ label: POSE_REF.labels[c.key].label, confidence: c.confidence });
-              }
             }
             frame++;
           }
@@ -142,11 +137,7 @@ export function PoseTracker({ poseKey, resetKey, paused, onRep }: Props) {
             <span className={`fa-dot ${inFrame ? "is-live" : ""}`} />
             {inFrame ? "Tracking" : "Step back into frame"}
           </span>
-          {detected && inFrame && (
-            <span className="fa-badge fa-badge--right">
-              {detected.label} · {Math.round(detected.confidence * 100)}%
-            </span>
-          )}
+          <span className="fa-badge fa-badge--right">Assigned exercise tracking</span>
         </>
       )}
       {status !== "live" && (

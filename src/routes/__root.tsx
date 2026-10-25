@@ -87,12 +87,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Personalized workouts ranked with TOPSIS, tracked with your camera, and adapted after every session.",
+          "Personalized workouts made for you, tracked with your camera, and adapted after every session.",
       },
       { property: "og:title", content: "FitAdapt — Adaptive Workout Recommendations" },
       {
         property: "og:description",
-        content: "Personalized workouts ranked with TOPSIS, tracked with your camera, and adapted after every session.",
+        content: "Personalized workouts made for you, tracked with your camera, and adapted after every session.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

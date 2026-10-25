@@ -1,5 +1,5 @@
 /** Browser-to-XAMPP API bridge. Configure VITE_FITADAPT_API_URL in .env.local. */
-export const FITADAPT_API_URL = (import.meta.env.VITE_FITADAPT_API_URL as string | undefined)?.replace(/\/$/, "") ?? "";
+export const FITADAPT_API_URL = (import.meta.env["VITE_FITADAPT_API_URL"] as string | undefined)?.replace(/\/$/, "") ?? "";
 
 export function getDeviceKey(): string {
   const keyName = "fitadapt:device-key:v1";

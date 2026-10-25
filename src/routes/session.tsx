@@ -199,7 +199,7 @@ function SessionPage() {
             {decision.swapOut.length > 0 && (
               <li>
                 Swapped out:{" "}
-                {decision.swapOut.map((id) => findExercise(catalog, id)?.name ?? id).join(", ")} — replaced with TOPSIS
+                {decision.swapOut.map((id) => findExercise(catalog, id)?.name ?? id).join(", ")} — replaced with better matches
                 alternatives.
               </li>
             )}

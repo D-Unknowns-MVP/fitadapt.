@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
       { title: "FitAdapt — Build the workout that fits your life" },
       {
         name: "description",
-        content: "Four quick questions: your goal, your space, your gear and you. Get a workout plan ranked with TOPSIS.",
+        content: "Four quick questions: your goal, your space, your gear and you. Get a workout plan made for you.",
       },
       { property: "og:title", content: "FitAdapt — Build the workout that fits your life" },
       {

@@ -25,9 +25,9 @@ export const Route = createFileRoute("/plan")({
   head: () => ({
     meta: [
       { title: "Your workout plan — FitAdapt" },
-      { name: "description", content: "Your personalized, TOPSIS-ranked workout with sets, reps and alternatives." },
+      { name: "description", content: "Your personalized workout with sets, reps and alternatives." },
       { property: "og:title", content: "Your workout plan — FitAdapt" },
-      { property: "og:description", content: "A personalized, TOPSIS-ranked workout with sets, reps and alternatives." },
+      { property: "og:description", content: "A personalized workout with sets, reps and alternatives." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -137,7 +137,7 @@ function PlanPage() {
             {isOpen && (
               <div className="fa-alts">
                 <div className="fa-alts-head">
-                  <Target /> Ranked alternatives (TOPSIS)
+                  <Target /> Alternatives
                 </div>
                 <label className="fa-check">
                   <input type="checkbox" checked={easier} onChange={(e) => setEasier(e.target.checked)} />
@@ -155,7 +155,6 @@ function PlanPage() {
                         {a.exercise.worksWith.map((w) => EQUIPMENT_LABELS[w]).join(", ")}
                       </span>
                     </span>
-                    <span className="fa-score">{Math.round(a.closeness * 100)}</span>
                   </button>
                 ))}
               </div>
@@ -163,68 +162,6 @@ function PlanPage() {
           </article>
         );
       })}
-
-      <section className="fa-card" style={{ marginTop: "1rem" }}>
-        <div className="fa-log-head">
-          <h2 className="fa-h2" style={{ margin: 0 }}>
-            How this plan was ranked
-          </h2>
-          <button type="button" className="fa-btn fa-btn--ghost fa-btn--sm" onClick={() => setShowMatrix((v) => !v)}>
-            {showMatrix ? "Hide" : "Show"}
-          </button>
-        </div>
-        {showMatrix && (
-          <>
-            <p className="fa-note">
-              Each exercise is scored 1–5 on six criteria, vector-normalised, weighted, and ranked by closeness to the
-              ideal solution.
-            </p>
-            <table className="fa-matrix">
-              <thead>
-                <tr>
-                  <th>Exercise</th>
-                  {catalog.criteria.map((c) => (
-                    <th key={c.code} title={c.name}>
-                      {c.code}
-                    </th>
-                  ))}
-                  <th>CI</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => {
-                  const ex = findExercise(catalog, item.exerciseId)!;
-                  return (
-                    <tr key={item.exerciseId}>
-                      <td>{ex.name}</td>
-                      {criteriaScores(ex, ctx).map((s, i) => (
-                        <td key={i}>{s.toFixed(1)}</td>
-                      ))}
-                      <td className="fa-accent">{item.score}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <dl className="fa-kv">
-              {catalog.criteria.map((c) => (
-                <div key={c.code} style={{ display: "contents" }}>
-                  <dt>
-                    {c.code} · {c.name}
-                  </dt>
-                  <dd>{Math.round(c.weight * 100)}%</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="fa-note">
-              Exercises and criteria come from the FitAdapt MySQL database design.{" "}
-              <a className="fa-accent" href="/fitadapt_mysql.sql" download>
-                Download the MySQL file
-              </a>
-            </p>
-          </>
-        )}
-      </section>
 
       <div className="fa-sticky">
         <Link to="/session" className="fa-btn fa-btn--primary">
@@ -244,9 +181,6 @@ function PlanPage() {
         </button>
       </div>
 
-      <p className="fa-footer">
-        Rep counting and form checks are calibrated with the <Link to="/dataset">Exercise Detection Dataset</Link>.
-      </p>
     </Screen>
   );
 }

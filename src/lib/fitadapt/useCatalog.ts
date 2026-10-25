@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { CRITERIA, EXERCISES } from "./catalog";
-import { getCatalog } from "./catalog.functions";
+import { FITADAPT_API_URL } from "./api";
 import type { Criterion, Exercise } from "./types";
 
 export interface Catalog {
@@ -12,17 +12,25 @@ export interface Catalog {
 
 export const SEED_CATALOG: Catalog = { source: "seed", exercises: EXERCISES, criteria: CRITERIA };
 
-/**
- * Exercise database + TOPSIS criteria. Loaded from MySQL when it is configured;
- * the bundled seed (identical to database/fitadapt_mysql.sql) is used until then.
- */
+async function loadCatalog(): Promise<Catalog> {
+  if (!FITADAPT_API_URL) return SEED_CATALOG;
+  try {
+    const response = await fetch(`${FITADAPT_API_URL}/index.php?route=catalog`);
+    if (!response.ok) throw new Error(`Catalog API returned ${response.status}`);
+    const data = (await response.json()) as Catalog;
+    if (data.source !== "mysql" || !Array.isArray(data.exercises) || !data.exercises.length || !Array.isArray(data.criteria)) {
+      throw new Error("MySQL catalog was empty or malformed");
+    }
+    return data;
+  } catch (error) {
+    console.warn("FitAdapt could not load the MySQL catalog; using the bundled exercise catalog.", error);
+    return SEED_CATALOG;
+  }
+}
+
+/** Reads the live MySQL catalog when the PHP API is configured, with a safe offline seed fallback. */
 export function useCatalog(): Catalog {
-  const { data } = useQuery({
-    queryKey: ["catalog"],
-    queryFn: () => getCatalog(),
-    staleTime: 10 * 60 * 1000,
-    retry: false,
-  });
+  const { data } = useQuery({ queryKey: ["catalog"], queryFn: loadCatalog, staleTime: 10 * 60 * 1000, retry: false });
   return data ?? SEED_CATALOG;
 }
 

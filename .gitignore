@@ -30,3 +30,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.env
+.env.local
+api/config.php
+coverage/

@@ -39,7 +39,7 @@ CREATE TABLE exercises (
   kind        ENUM('reps','hold') NOT NULL,
   low_impact  BOOLEAN      NOT NULL DEFAULT 0,
   instruction VARCHAR(255) NOT NULL,
-  pose_label  ENUM('jumping_jacks','pull_ups','push_ups','russian_twists','squats') NULL,
+  pose_label  ENUM('jumping_jacks','pull_ups','push_ups','russian_twists','squats','glute_bridge','high_knees','mountain_climber','wall_sit') NULL,
   sort_order  SMALLINT     NOT NULL
 ) ENGINE=InnoDB;
 

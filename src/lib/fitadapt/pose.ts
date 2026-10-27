@@ -155,3 +155,71 @@ export class RepCounter {
     this.goodFrames = 0;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Hold (isometric) exercises: count only the seconds spent in correct form.
+// ---------------------------------------------------------------------------
+
+export type HoldKey = "plank" | "wall_sit";
+
+export interface HoldCheck {
+  ok: boolean;
+  cue: string;
+}
+
+/**
+ * Form check for one frame of a hold. Angles are [shoulder, elbow, hip, knee, ankle].
+ * - Wall sit: the bottom of the dataset's wall_sit knee/hip distribution (p5 down to ~p50 + margin).
+ * - Plank: straight shoulder–hip–knee–ankle line (no dataset label exists, so this is geometric).
+ */
+export function holdForm(key: HoldKey, angles: number[]): HoldCheck {
+  const [shoulder = 0, , hip = 0, knee = 0] = angles;
+  if (key === "wall_sit") {
+    const q = POSE_REF.labels.wall_sit.quantiles;
+    const lo = q.knee[0]! - 15;
+    const hi = q.knee[2]! + 15;
+    if (knee > hi) return { ok: false, cue: "Sit lower — thighs parallel" };
+    if (knee < lo) return { ok: false, cue: "Too low — rise slightly" };
+    if (hip > q.hip[2]! + 20) return { ok: false, cue: "Sit back against the wall" };
+    return { ok: true, cue: "Good form — hold it" };
+  }
+  if (hip < 155) return { ok: false, cue: "Straighten your hips" };
+  if (knee < 150) return { ok: false, cue: "Straighten your legs" };
+  if (shoulder < 50 || shoulder > 120) return { ok: false, cue: "Shoulders over elbows" };
+  return { ok: true, cue: "Good form — hold it" };
+}
+
+/** Accumulates time only while form is correct. Gaps longer than maxGapMs are not credited. */
+export class HoldTimer {
+  private goodMs = 0;
+  private totalMs = 0;
+  private last: number | null = null;
+  constructor(private readonly maxGapMs = 300) {}
+
+  /** Feed one frame; returns whole seconds held in good form so far. */
+  push(ok: boolean, nowMs: number): number {
+    if (this.last !== null) {
+      const dt = nowMs - this.last;
+      if (dt > 0 && dt <= this.maxGapMs) {
+        this.totalMs += dt;
+        if (ok) this.goodMs += dt;
+      }
+    }
+    this.last = nowMs;
+    return this.seconds;
+  }
+
+  /** Call when tracking pauses (person left frame) so the gap isn't credited. */
+  break() {
+    this.last = null;
+  }
+
+  get seconds() {
+    return Math.floor(this.goodMs / 1000);
+  }
+
+  /** Share of tracked time spent in good form (0–1). */
+  get formRatio() {
+    return this.totalMs ? this.goodMs / this.totalMs : 0;
+  }
+}

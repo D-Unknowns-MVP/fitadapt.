@@ -27,7 +27,7 @@ CREATE TABLE exercises (
   kind        ENUM('reps','hold') NOT NULL,
   low_impact  BOOLEAN      NOT NULL DEFAULT 0,
   instruction VARCHAR(255) NOT NULL,
-  pose_label  ENUM('jumping_jacks','pull_ups','push_ups','russian_twists','squats') NULL,
+  pose_label  ENUM('jumping_jacks','pull_ups','push_ups','russian_twists','squats','glute_bridge','high_knees','mountain_climber','wall_sit') NULL,
   sort_order  SMALLINT     NOT NULL
 ) ENGINE=InnoDB;
 
@@ -89,7 +89,7 @@ INSERT INTO exercises (id, name, muscle, difficulty, kind, low_impact, instructi
   ('russian_twist', 'Russian twist', 'core', 2, 'reps', 1, 'Lean back, chest proud, rotate from the ribs.', 'russian_twists', 4),
   ('crunch', 'Crunch', 'core', 1, 'reps', 1, 'Lift the shoulders, keep the chin off the chest.', NULL, 5),
   ('plank', 'Plank', 'core', 1, 'hold', 1, 'Straight line head to heels, squeeze glutes.', NULL, 6),
-  ('mountain_climber', 'Mountain climber', 'core', 3, 'reps', 0, 'Hips level, drive the knees fast toward the chest.', NULL, 7),
+  ('mountain_climber', 'Mountain climber', 'core', 3, 'reps', 0, 'Hips level, drive the knees fast toward the chest.', 'mountain_climber', 7),
   ('hanging_knee_raise', 'Hanging knee raise', 'core', 4, 'reps', 1, 'No swinging — curl the pelvis up to the ribs.', NULL, 8),
   ('cable_crunch', 'Cable crunch', 'core', 3, 'reps', 1, 'Hips still, crunch the ribs toward the pelvis.', NULL, 9),
   ('knee_push_up', 'Knee push-up', 'chest', 1, 'reps', 1, 'Knees down, body straight from knees to head.', 'push_ups', 10),
@@ -111,14 +111,14 @@ INSERT INTO exercises (id, name, muscle, difficulty, kind, low_impact, instructi
   ('bodyweight_squat', 'Bodyweight squat', 'legs', 1, 'reps', 0, 'Sit back and down, knees track over toes.', 'squats', 26),
   ('goblet_squat', 'Goblet squat', 'legs', 2, 'reps', 0, 'Weight at the chest, elbows inside the knees.', 'squats', 27),
   ('barbell_back_squat', 'Barbell back squat', 'legs', 4, 'reps', 0, 'Brace, break at hips and knees, hit depth.', 'squats', 28),
-  ('wall_sit', 'Wall sit', 'legs', 2, 'hold', 1, 'Thighs parallel, back flat on the wall.', NULL, 29),
+  ('wall_sit', 'Wall sit', 'legs', 2, 'hold', 1, 'Thighs parallel, back flat on the wall.', 'wall_sit', 29),
   ('reverse_lunge', 'Reverse lunge', 'legs', 2, 'reps', 1, 'Step back, back knee kisses the floor.', NULL, 30),
-  ('glute_bridge', 'Glute bridge', 'glutes', 1, 'reps', 1, 'Drive through the heels, squeeze at the top.', NULL, 31),
+  ('glute_bridge', 'Glute bridge', 'glutes', 1, 'reps', 1, 'Drive through the heels, squeeze at the top.', 'glute_bridge', 31),
   ('kettlebell_swing', 'Kettlebell swing', 'glutes', 3, 'reps', 0, 'Hinge, snap the hips, float the bell to chest height.', NULL, 32),
   ('romanian_deadlift', 'Romanian deadlift', 'glutes', 3, 'reps', 1, 'Soft knees, push the hips back, flat spine.', NULL, 33),
   ('leg_press', 'Leg press', 'legs', 2, 'reps', 1, 'Lower until knees reach 90°, don''t lock out hard.', NULL, 34),
   ('jumping_jack', 'Jumping jack', 'cardio', 1, 'reps', 0, 'Arms overhead as the feet jump wide, stay light.', 'jumping_jacks', 35),
-  ('high_knees', 'High knees', 'cardio', 2, 'reps', 0, 'Knees to hip height, quick feet, tall chest.', NULL, 36),
+  ('high_knees', 'High knees', 'cardio', 2, 'reps', 0, 'Knees to hip height, quick feet, tall chest.', 'high_knees', 36),
   ('burpee', 'Burpee', 'cardio', 4, 'reps', 0, 'Chest to floor, jump up with arms overhead.', NULL, 37),
   ('jump_rope', 'Jump rope', 'cardio', 2, 'reps', 0, 'Wrists turn the rope, small bounces on the toes.', NULL, 38),
   ('step_jack', 'Step jack', 'cardio', 1, 'reps', 1, 'Step one foot out as the arms rise — no jumping.', NULL, 39);

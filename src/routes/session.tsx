@@ -78,7 +78,10 @@ function SessionPage() {
   }, []);
 
   // Camera-timed holds: reps = seconds spent in correct form
+  const holdingRef = useRef(holding);
+  holdingRef.current = holding;
   const onHold = useCallback((u: HoldUpdate) => {
+    if (holdingRef.current) return; // manual timer in charge
     setHold(u);
     setReps(u.seconds);
   }, []);

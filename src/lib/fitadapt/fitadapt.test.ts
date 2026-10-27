@@ -104,3 +104,36 @@ describe("dataset-driven pose tracking", () => {
     expect(classify(sample.slice(0, 5) as number[]).key).toBe("push_ups");
   });
 });
+
+import { HoldTimer, holdForm } from "./pose";
+
+describe("Hold tracking", () => {
+  it("counts only seconds spent in correct form", () => {
+    const t = new HoldTimer();
+    let now = 0;
+    for (let i = 0; i < 60; i++) t.push(true, (now += 100)); // ~6s good
+    for (let i = 0; i < 30; i++) t.push(false, (now += 100)); // 3s bad
+    expect(t.seconds).toBe(5);
+    expect(t.formRatio).toBeGreaterThan(0.6);
+    expect(t.formRatio).toBeLessThan(0.7);
+  });
+
+  it("does not credit time while out of frame", () => {
+    const t = new HoldTimer();
+    t.push(true, 0);
+    t.push(true, 500);
+    t.break();
+    t.push(true, 10_000);
+    expect(t.seconds).toBe(0);
+  });
+
+  it("plank requires a straight body line", () => {
+    expect(holdForm("plank", [80, 90, 175, 175, 90]).ok).toBe(true);
+    expect(holdForm("plank", [80, 90, 130, 175, 90]).ok).toBe(false);
+  });
+
+  it("wall sit requires thighs near parallel", () => {
+    expect(holdForm("wall_sit", [5, 170, 95, 95, 178]).ok).toBe(true);
+    expect(holdForm("wall_sit", [5, 170, 175, 175, 178]).ok).toBe(false);
+  });
+});

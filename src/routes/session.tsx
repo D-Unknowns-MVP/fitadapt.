@@ -234,7 +234,7 @@ function SessionPage() {
       <h1 className="fa-title fa-title--md">{ex.name}</h1>
       <p className="fa-sub">{ex.instruction}</p>
 
-      {ex.pose ? (
+      {ex.pose && !isHold ? (
         <PoseTracker
           poseKey={ex.pose}
           resetKey={`${exIdx}-${setNo}`}

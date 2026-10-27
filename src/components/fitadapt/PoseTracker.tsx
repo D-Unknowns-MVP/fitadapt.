@@ -1,7 +1,7 @@
 import { CameraOff, Video } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { HoldTimer, RepCounter, holdForm, jointAngles, withinBand, type HoldKey, type RepEvent } from "@/lib/fitadapt/pose";
+import { RepCounter, jointAngles, withinBand, type RepEvent } from "@/lib/fitadapt/pose";
 import type { PoseKey } from "@/lib/fitadapt/types";
 
 const WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.1/wasm";
@@ -13,23 +13,12 @@ const BONES: [number, number][] = [
   [23, 25], [25, 27], [27, 31], [24, 26], [26, 28], [28, 32],
 ];
 
-export interface HoldUpdate {
-  seconds: number;
-  ok: boolean;
-  cue: string;
-  formRatio: number;
-}
-
 interface Props {
-  /** Rep exercises: dataset label used for rep counting. */
-  poseKey?: PoseKey;
-  /** Hold exercises: form check; seconds are counted only while form is correct. */
-  holdKey?: HoldKey;
-  onHold?: (u: HoldUpdate) => void;
+  poseKey: PoseKey;
   /** Changing this resets the rep counter (new set or exercise). */
   resetKey: string;
   paused: boolean;
-  onRep?: (e: RepEvent) => void;
+  onRep: (e: RepEvent) => void;
 }
 
 type Status = "idle" | "loading" | "live" | "error";
@@ -38,14 +27,11 @@ type Status = "idle" | "loading" | "live" | "error";
  * Camera + MediaPipe Pose. Frames are processed on the device only — nothing is uploaded.
  * The exercise is supplied by the workout plan; the camera tracks movement for that assigned exercise only.
  */
-export function PoseTracker({ poseKey, holdKey, onHold, resetKey, paused, onRep }: Props) {
+export function PoseTracker({ poseKey, resetKey, paused, onRep }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const counterRef = useRef<RepCounter | null>(null);
   const onRepRef = useRef(onRep);
-  const onHoldRef = useRef(onHold);
-  const holdRef = useRef<HoldTimer | null>(null);
-  const lastHoldRef = useRef("");
   const pausedRef = useRef(paused);
   const [enabled, setEnabled] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
@@ -53,14 +39,11 @@ export function PoseTracker({ poseKey, holdKey, onHold, resetKey, paused, onRep 
   const [error, setError] = useState("");
 
   onRepRef.current = onRep;
-  onHoldRef.current = onHold;
   pausedRef.current = paused;
 
   useEffect(() => {
-    counterRef.current = poseKey && !holdKey ? new RepCounter(poseKey) : null;
-    holdRef.current = holdKey ? new HoldTimer() : null;
-    lastHoldRef.current = "";
-  }, [poseKey, holdKey, resetKey]);
+    counterRef.current = new RepCounter(poseKey);
+  }, [poseKey, resetKey]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -118,27 +101,9 @@ export function PoseTracker({ poseKey, holdKey, onHold, resetKey, paused, onRep 
                 ctx.fill();
               }
             }
-            const tracking = ja && visible && !pausedRef.current;
-            if (tracking && counterRef.current && poseKey) {
+            if (ja && visible && !pausedRef.current && counterRef.current) {
               const event = counterRef.current.push(ja.angles, withinBand(poseKey, ja.angles));
-              if (event) onRepRef.current?.(event);
-            }
-            if (holdRef.current && holdKey) {
-              const timer = holdRef.current;
-              let update: HoldUpdate;
-              if (tracking) {
-                const check = holdForm(holdKey, ja.angles);
-                const seconds = timer.push(check.ok, performance.now());
-                update = { seconds, ok: check.ok, cue: check.cue, formRatio: timer.formRatio };
-              } else {
-                timer.break();
-                update = { seconds: timer.seconds, ok: false, cue: visible ? "Paused" : "Step back into frame", formRatio: timer.formRatio };
-              }
-              const sig = `${update.seconds}|${update.ok}|${update.cue}`;
-              if (sig !== lastHoldRef.current) {
-                lastHoldRef.current = sig;
-                onHoldRef.current?.(update);
-              }
+              if (event) onRepRef.current(event);
             }
             frame++;
           }
@@ -160,7 +125,7 @@ export function PoseTracker({ poseKey, holdKey, onHold, resetKey, paused, onRep 
       stream?.getTracks().forEach((t) => t.stop());
       landmarker?.close();
     };
-  }, [enabled, poseKey, holdKey]);
+  }, [enabled, poseKey]);
 
   return (
     <div className="fa-camera">
@@ -172,7 +137,7 @@ export function PoseTracker({ poseKey, holdKey, onHold, resetKey, paused, onRep 
             <span className={`fa-dot ${inFrame ? "is-live" : ""}`} />
             {inFrame ? "Tracking" : "Step back into frame"}
           </span>
-          <span className="fa-badge fa-badge--right">{holdKey ? "Hold form tracking" : "Assigned exercise tracking"}</span>
+          <span className="fa-badge fa-badge--right">Assigned exercise tracking</span>
         </>
       )}
       {status !== "live" && (
@@ -180,7 +145,7 @@ export function PoseTracker({ poseKey, holdKey, onHold, resetKey, paused, onRep 
           {status === "error" ? <CameraOff /> : <Video />}
           {status === "idle" && (
             <>
-              <span>{holdKey ? "Turn on the camera to time your hold — only seconds in correct form count." : "Turn on the camera to count reps and measure range of motion automatically."}</span>
+              <span>Turn on the camera to count reps and measure range of motion automatically.</span>
               <button type="button" className="fa-btn fa-btn--primary fa-btn--sm" onClick={() => setEnabled(true)}>
                 Enable camera
               </button>

@@ -85,7 +85,7 @@ lines.push("INSERT INTO exercises (id, name, muscle, difficulty, kind, low_impac
 lines.push(
   EXERCISES.map(
     (e, i) =>
-      `  (${q(e.id)}, ${q(e.name)}, ${q(e.muscle)}, ${e.difficulty}, ${q(e.kind)}, ${q(e.lowImpact)}, ${q(e.instruction)}, ${q(e.pose ?? (e.holdPose === "wall_sit" ? "wall_sit" : null))}, ${i + 1})`,
+      `  (${q(e.id)}, ${q(e.name)}, ${q(e.muscle)}, ${e.difficulty}, ${q(e.kind)}, ${q(e.lowImpact)}, ${q(e.instruction)}, ${q(e.pose ?? null)}, ${i + 1})`,
   ).join(",\n") + ";\n",
 );
 

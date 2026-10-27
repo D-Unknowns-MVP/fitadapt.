@@ -34,8 +34,6 @@ export interface Exercise {
   instruction: string;
   /** Exercise Detection Dataset label used for camera tracking, when supported. */
   pose?: PoseKey;
-  /** Camera form check used to time hold exercises (seconds in correct form). */
-  holdPose?: "plank" | "wall_sit";
 }
 
 export interface Criterion {

@@ -2,14 +2,14 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowDown, ArrowLeft, ArrowUp, Check, Minus, Pause, Play, Plus, SkipForward, Timer } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { PoseTracker } from "@/components/fitadapt/PoseTracker";
+import { PoseTracker, type HoldUpdate } from "@/components/fitadapt/PoseTracker";
 import { Loading, Screen } from "@/components/fitadapt/Screen";
 import { adapt, exerciseStats, summarize } from "@/lib/fitadapt/adaptation";
 import { generatePlan, planTitle } from "@/lib/fitadapt/recommend";
 import { setState, useAppState } from "@/lib/fitadapt/store";
 import { findExercise, useCatalog } from "@/lib/fitadapt/useCatalog";
 import type { AdaptationDecision, Feeling, SetResult } from "@/lib/fitadapt/types";
-import type { RepEvent } from "@/lib/fitadapt/pose";
+import type { HoldKey, RepEvent } from "@/lib/fitadapt/pose";
 
 export const Route = createFileRoute("/session")({
   head: () => ({
@@ -41,6 +41,7 @@ function SessionPage() {
   const [results, setResults] = useState<SetResult[]>([]);
   const [rest, setRest] = useState(0);
   const [holding, setHolding] = useState(false);
+  const [hold, setHold] = useState<HoldUpdate | null>(null);
   const [decision, setDecision] = useState<AdaptationDecision | null>(null);
   const startedAt = useRef(Date.now());
 
@@ -76,17 +77,27 @@ function SessionPage() {
     setForms((x) => [...x, e.form]);
   }, []);
 
+  // Camera-timed holds: reps = seconds spent in correct form
+  const holdingRef = useRef(holding);
+  holdingRef.current = holding;
+  const onHold = useCallback((u: HoldUpdate) => {
+    if (holdingRef.current) return; // manual timer in charge
+    setHold(u);
+    setReps(u.seconds);
+  }, []);
+
   const finishSet = useCallback(() => {
     if (!item || !ex) return;
-    const tracked = roms.length > 0;
+    const holdTracked = !!hold && hold.formRatio > 0;
+    const tracked = roms.length > 0 || holdTracked;
     const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
     const result: SetResult = {
       exerciseId: item.exerciseId,
       set: setNo,
       reps: Math.min(reps, item.target * 2),
       target: item.target,
-      rom: tracked ? mean(roms) : 0,
-      form: tracked ? mean(forms) : 0,
+      rom: holdTracked ? 1 : tracked ? mean(roms) : 0,
+      form: holdTracked ? hold!.formRatio : tracked ? mean(forms) : 0,
       tracked,
     };
     setResults((r) => [...r, result]);
@@ -94,6 +105,7 @@ function SessionPage() {
     setRoms([]);
     setForms([]);
     setHolding(false);
+    setHold(null);
 
     if (setNo < item.sets) {
       setSetNo((s) => s + 1);
@@ -107,7 +119,7 @@ function SessionPage() {
     } else {
       setPhase("feedback");
     }
-  }, [item, ex, roms, forms, reps, setNo, exIdx, items.length]);
+  }, [item, ex, roms, forms, hold, reps, setNo, exIdx, items.length]);
 
   // Auto-finish when target reached (reps or hold seconds)
   useEffect(() => {
@@ -219,6 +231,9 @@ function SessionPage() {
 
   if (!item || !ex) return <Loading />;
   const isHold = ex.kind === "hold";
+  const holdKey: HoldKey | undefined =
+    ex.holdPose ?? (isHold && (ex.id === "plank" || ex.id === "wall_sit") ? ex.id : undefined);
+  const cameraHold = isHold && !!holdKey;
   const lastRom = roms[roms.length - 1] ?? null;
 
   return (
@@ -234,7 +249,9 @@ function SessionPage() {
       <h1 className="fa-title fa-title--md">{ex.name}</h1>
       <p className="fa-sub">{ex.instruction}</p>
 
-      {ex.pose ? (
+      {cameraHold ? (
+        <PoseTracker holdKey={holdKey} resetKey={`${exIdx}-${setNo}`} paused={phase !== "work" || holding} onHold={onHold} />
+      ) : ex.pose && !isHold ? (
         <PoseTracker
           poseKey={ex.pose}
           resetKey={`${exIdx}-${setNo}`}
@@ -271,7 +288,7 @@ function SessionPage() {
         <>
           <div className="fa-stats fa-stats--3">
             <div className="fa-stat">
-              <div className="fa-stat-label">{isHold ? "Seconds" : "Reps"}</div>
+              <div className="fa-stat-label">{isHold ? "Good-form sec" : "Reps"}</div>
               <div className="fa-stat-value">
                 {reps}
                 <small>/{item.target}</small>
@@ -284,20 +301,32 @@ function SessionPage() {
                 <small>/{item.sets}</small>
               </div>
             </div>
-            <div className="fa-stat">
-              <div className="fa-stat-label">ROM</div>
-              <div className={`fa-stat-value ${lastRom !== null && lastRom < 0.7 ? "fa-warn" : ""}`}>
-                {lastRom === null ? "—" : `${Math.round(lastRom * 100)}%`}
+            {isHold ? (
+              <div className="fa-stat">
+                <div className="fa-stat-label">Form</div>
+                <div className={`fa-stat-value ${hold && !hold.ok ? "fa-warn" : ""}`}>
+                  {hold ? (hold.ok ? "Good" : "Fix") : "—"}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="fa-stat">
+                <div className="fa-stat-label">ROM</div>
+                <div className={`fa-stat-value ${lastRom !== null && lastRom < 0.7 ? "fa-warn" : ""}`}>
+                  {lastRom === null ? "—" : `${Math.round(lastRom * 100)}%`}
+                </div>
+              </div>
+            )}
           </div>
           <div className="fa-bar">
             <span style={{ width: `${Math.min(100, (reps / item.target) * 100)}%` }} />
           </div>
+          {cameraHold && hold && (
+            <p className={`fa-hold-cue ${hold.ok ? "is-ok" : "is-bad"}`}>{hold.cue}</p>
+          )}
           <div className="fa-row">
             {isHold ? (
               <button type="button" className="fa-btn fa-btn--primary" onClick={() => setHolding((h) => !h)}>
-                {holding ? <Pause /> : <Play />} {holding ? "Pause hold" : "Start hold"}
+                {holding ? <Pause /> : <Play />} {holding ? "Pause timer" : cameraHold ? "Manual timer" : "Start hold"}
               </button>
             ) : (
               <button type="button" className="fa-btn fa-btn--primary" onClick={() => setReps((r) => r + 1)}>

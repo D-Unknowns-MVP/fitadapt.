@@ -18,3 +18,4 @@
 - `src/data/pose-reference.json` is generated from the Exercise Detection Dataset by `scripts/build_pose_reference.py`; rep thresholds, ROM span, form bands and k-NN samples all come from it — don't hand-tune those numbers in code.
 - UI is styled with plain CSS classes (`fa-*`) in `src/fitadapt.css` using the design tokens from `src/styles.css`; avoid Tailwind utility classes in FitAdapt screens.
 - TOPSIS, adaptation rules and rep counting are pure modules covered by `src/lib/fitadapt/fitadapt.test.ts`.
+- Hold exercises (`kind: "hold"`, `holdPose`) are camera-timed via `holdForm` + `HoldTimer` in `pose.ts`: only seconds in correct form count; rep exercises use `RepCounter`. Plank form is geometric (no dataset label); wall sit uses dataset quantiles.

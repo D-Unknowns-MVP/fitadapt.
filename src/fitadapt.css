@@ -943,3 +943,14 @@
   text-align: right;
   font-weight: 600;
 }
+
+.fa-hold-cue {
+  margin: 0.4rem 0 0.8rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.fa-hold-cue.is-ok { color: var(--primary); border-color: var(--primary); }
+.fa-hold-cue.is-bad { color: var(--warning, oklch(0.8 0.16 75)); border-color: currentColor; }

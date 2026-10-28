@@ -111,7 +111,7 @@ INSERT INTO exercises (id, name, muscle, difficulty, kind, low_impact, instructi
   ('bodyweight_squat', 'Bodyweight squat', 'legs', 1, 'reps', 0, 'Sit back and down, knees track over toes.', 'squats', 26),
   ('goblet_squat', 'Goblet squat', 'legs', 2, 'reps', 0, 'Weight at the chest, elbows inside the knees.', 'squats', 27),
   ('barbell_back_squat', 'Barbell back squat', 'legs', 4, 'reps', 0, 'Brace, break at hips and knees, hit depth.', 'squats', 28),
-  ('wall_sit', 'Wall sit', 'legs', 2, 'hold', 1, 'Thighs parallel, back flat on the wall.', 'wall_sit', 29),
+  ('wall_sit', 'Wall sit', 'legs', 2, 'hold', 1, 'Thighs parallel, back flat on the wall.', NULL, 29),
   ('reverse_lunge', 'Reverse lunge', 'legs', 2, 'reps', 1, 'Step back, back knee kisses the floor.', NULL, 30),
   ('glute_bridge', 'Glute bridge', 'glutes', 1, 'reps', 1, 'Drive through the heels, squeeze at the top.', 'glute_bridge', 31),
   ('kettlebell_swing', 'Kettlebell swing', 'glutes', 3, 'reps', 0, 'Hinge, snap the hips, float the bell to chest height.', NULL, 32),

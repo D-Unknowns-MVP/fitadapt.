@@ -17,7 +17,6 @@ PRIMARY = {
     "Glute Bridge": "Hip_Angle",
     "High Knees": "Hip_Angle",
     "Mountain Climber": "Hip_Angle",
-    "Wall Sit": "Knee_Angle",
 }
 KEYS = {"Jumping Jacks": "jumping_jacks", "Pull ups": "pull_ups", "Push Ups": "push_ups",
         "Russian twists": "russian_twists", "Squats": "squats"}

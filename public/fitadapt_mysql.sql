@@ -88,7 +88,7 @@ INSERT INTO exercises (id, name, muscle, difficulty, kind, low_impact, instructi
   ('bicycle_crunch', 'Bicycle crunch', 'core', 2, 'reps', 1, 'Elbow to opposite knee, slow and controlled.', NULL, 3),
   ('russian_twist', 'Russian twist', 'core', 2, 'reps', 1, 'Lean back, chest proud, rotate from the ribs.', 'russian_twists', 4),
   ('crunch', 'Crunch', 'core', 1, 'reps', 1, 'Lift the shoulders, keep the chin off the chest.', NULL, 5),
-  ('plank', 'Plank', 'core', 1, 'hold', 1, 'Straight line head to heels, squeeze glutes.', NULL, 6),
+  ('plank', 'Plank', 'core', 1, 'hold', 1, 'Keep your body straight from head to heels, brace your core, and avoid letting your hips sag or rise.', 'plank', 6),
   ('mountain_climber', 'Mountain climber', 'core', 3, 'reps', 0, 'Hips level, drive the knees fast toward the chest.', 'mountain_climber', 7),
   ('hanging_knee_raise', 'Hanging knee raise', 'core', 4, 'reps', 1, 'No swinging — curl the pelvis up to the ribs.', NULL, 8),
   ('cable_crunch', 'Cable crunch', 'core', 3, 'reps', 1, 'Hips still, crunch the ribs toward the pelvis.', NULL, 9),
@@ -125,6 +125,7 @@ INSERT INTO exercises (id, name, muscle, difficulty, kind, low_impact, instructi
 
 INSERT INTO exercise_secondary_muscles (exercise_id, muscle) VALUES
   ('plank', 'shoulders'),
+  ('plank', 'glutes'),
   ('mountain_climber', 'cardio'),
   ('mountain_climber', 'shoulders'),
   ('hanging_knee_raise', 'arms'),

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Loading, Screen } from "@/components/fitadapt/Screen";
 import { EQUIPMENT_LABELS } from "@/lib/fitadapt/catalog";
 import { useCatalog } from "@/lib/fitadapt/useCatalog";
-import { AREA_LABELS, BUILD_LABELS, FOCUS_LABELS, GOAL_LABELS, generatePlan } from "@/lib/fitadapt/recommend";
+import { AREA_LABELS, BUILD_LABELS, GOAL_LABELS, generatePlan } from "@/lib/fitadapt/recommend";
 import { LEVEL_FOR_EXPERIENCE, setState, useAppState } from "@/lib/fitadapt/store";
 import type { BuildType, Environment, Equipment, Focus, Goal, Muscle, Profile } from "@/lib/fitadapt/types";
 
@@ -171,23 +171,6 @@ function Onboarding() {
                       onClick={() => setBuildType(b)}
                     >
                       {BUILD_LABELS[b]}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-            {goal !== "target_part" && goal !== "body_build" && (
-              <>
-                <span className="fa-label">Target body part</span>
-                <div className="fa-chips">
-                  {(Object.keys(FOCUS_LABELS) as Focus[]).map((f) => (
-                    <button
-                      key={f}
-                      type="button"
-                      className={`fa-chip ${focus === f ? "is-on" : ""}`}
-                      onClick={() => setFocus(f)}
-                    >
-                      {FOCUS_LABELS[f]}
                     </button>
                   ))}
                 </div>

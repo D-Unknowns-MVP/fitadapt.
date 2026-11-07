@@ -13,7 +13,7 @@ export type Equipment =
   | "mat"
   | "jump_rope";
 export type Muscle = "core" | "chest" | "back" | "shoulders" | "arms" | "legs" | "glutes" | "cardio";
-export type PoseKey = "jumping_jacks" | "pull_ups" | "push_ups" | "russian_twists" | "squats" | "glute_bridge" | "high_knees" | "mountain_climber";
+export type PoseKey = "jumping_jacks" | "pull_ups" | "push_ups" | "russian_twists" | "squats" | "glute_bridge" | "high_knees" | "mountain_climber" | "plank";
 
 export interface Exercise {
   id: string;
@@ -43,9 +43,15 @@ export interface Criterion {
   weight: number;
 }
 
+export type BuildType = "lean" | "athletic" | "bulk";
+
 export interface Profile {
   goal: Goal;
   focus: Focus;
+  /** Body parts picked for the "Target a body part" goal */
+  areas?: Muscle[] | undefined;
+  /** Look picked for the "Body build" goal */
+  build?: BuildType | undefined;
   environment: Environment;
   equipment: Equipment[];
   /** 1 beginner, 2 intermediate, 3 advanced */

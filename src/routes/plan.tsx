@@ -76,7 +76,7 @@ function PlanPage() {
         ...s.plan,
         items: s.plan.items.map((it) =>
           it.exerciseId === from
-            ? { exerciseId: to.id, score: it.score, ...prescribe(to, profile.goal, s.level) }
+            ? { exerciseId: to.id, score: it.score, ...prescribe(to, profile.goal, s.level, profile.build) }
             : it,
         ),
       },

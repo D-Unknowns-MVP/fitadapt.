@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { Loading, Screen } from "@/components/fitadapt/Screen";
 import { EQUIPMENT_LABELS } from "@/lib/fitadapt/catalog";
 import { useCatalog } from "@/lib/fitadapt/useCatalog";
-import { FOCUS_LABELS, GOAL_LABELS, generatePlan } from "@/lib/fitadapt/recommend";
+import { AREA_LABELS, BUILD_LABELS, FOCUS_LABELS, GOAL_LABELS, generatePlan } from "@/lib/fitadapt/recommend";
 import { LEVEL_FOR_EXPERIENCE, setState, useAppState } from "@/lib/fitadapt/store";
-import type { Environment, Equipment, Focus, Goal, Profile } from "@/lib/fitadapt/types";
+import type { BuildType, Environment, Equipment, Focus, Goal, Muscle, Profile } from "@/lib/fitadapt/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,8 +35,8 @@ const GOALS: { id: Goal; sub: string; focus: Focus }[] = [
   { id: "lose_weight", sub: "Burn calories, build stamina", focus: "full" },
   { id: "gain_muscle", sub: "Get stronger and add size", focus: "upper" },
   { id: "build_abs", sub: "Develop your abdominal muscles", focus: "core" },
-  { id: "target_part", sub: "Focus on one area of your body", focus: "core" },
-  { id: "body_build", sub: "Shape a balanced, athletic build", focus: "full" },
+  { id: "target_part", sub: "Pick the body parts you want to bring up", focus: "core" },
+  { id: "body_build", sub: "Train toward a lean, athletic or bulked look", focus: "full" },
 ];
 
 const PLACES: { id: Environment; title: string; sub: string }[] = [
@@ -55,6 +55,8 @@ function Onboarding() {
   const [step, setStep] = useState(0);
   const [goal, setGoal] = useState<Goal>("target_part");
   const [focus, setFocus] = useState<Focus>("core");
+  const [areas, setAreas] = useState<Muscle[]>(["core"]);
+  const [buildType, setBuildType] = useState<BuildType>("athletic");
   const [environment, setEnvironment] = useState<Environment>("home");
   const [equipment, setEquipment] = useState<Equipment[]>(["bodyweight"]);
   const [experience, setExperience] = useState<1 | 2 | 3>(1);
@@ -83,6 +85,8 @@ function Onboarding() {
     const profile: Profile = {
       goal,
       focus,
+      areas: goal === "target_part" ? areas : undefined,
+      build: goal === "body_build" ? buildType : undefined,
       environment,
       equipment,
       experience,
@@ -134,19 +138,61 @@ function Onboarding() {
                 </button>
               ))}
             </div>
-            <span className="fa-label">Target body part</span>
-            <div className="fa-chips">
-              {(Object.keys(FOCUS_LABELS) as Focus[]).map((f) => (
-                <button
-                  key={f}
-                  type="button"
-                  className={`fa-chip ${focus === f ? "is-on" : ""}`}
-                  onClick={() => setFocus(f)}
-                >
-                  {FOCUS_LABELS[f]}
-                </button>
-              ))}
-            </div>
+            {goal === "target_part" && (
+              <>
+                <span className="fa-label">Which areas should we prioritize?</span>
+                <div className="fa-chips">
+                  {(Object.keys(AREA_LABELS) as (keyof typeof AREA_LABELS)[]).map((a) => (
+                    <button
+                      key={a}
+                      type="button"
+                      className={`fa-chip ${areas.includes(a) ? "is-on" : ""}`}
+                      onClick={() =>
+                        setAreas((cur) =>
+                          cur.includes(a) ? (cur.length > 1 ? cur.filter((x) => x !== a) : cur) : [...cur, a],
+                        )
+                      }
+                    >
+                      {AREA_LABELS[a]}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            {goal === "body_build" && (
+              <>
+                <span className="fa-label">Which build are you after?</span>
+                <div className="fa-chips">
+                  {(Object.keys(BUILD_LABELS) as BuildType[]).map((b) => (
+                    <button
+                      key={b}
+                      type="button"
+                      className={`fa-chip ${buildType === b ? "is-on" : ""}`}
+                      onClick={() => setBuildType(b)}
+                    >
+                      {BUILD_LABELS[b]}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            {goal !== "target_part" && goal !== "body_build" && (
+              <>
+                <span className="fa-label">Target body part</span>
+                <div className="fa-chips">
+                  {(Object.keys(FOCUS_LABELS) as Focus[]).map((f) => (
+                    <button
+                      key={f}
+                      type="button"
+                      className={`fa-chip ${focus === f ? "is-on" : ""}`}
+                      onClick={() => setFocus(f)}
+                    >
+                      {FOCUS_LABELS[f]}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </>
         )}
 

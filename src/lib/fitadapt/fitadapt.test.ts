@@ -104,3 +104,16 @@ describe("dataset-driven pose tracking", () => {
     expect(classify(sample.slice(0, 5) as number[]).key).toBe("push_ups");
   });
 });
+
+import { prescribe as _prescribe } from "./recommend";
+import { EXERCISES as _EX } from "./catalog";
+describe("body build look", () => {
+  it("lean gives more reps and shorter rest than bulked up", () => {
+    const ex = _EX.find((e) => e.kind !== "hold" && e.requires.length === 0)!;
+    const lean = _prescribe(ex, "body_build", 2, "lean");
+    const bulk = _prescribe(ex, "body_build", 2, "bulk");
+    expect(lean.target).toBeGreaterThan(bulk.target);
+    expect(lean.restSec).toBe(40);
+    expect(bulk.restSec).toBe(90);
+  });
+});

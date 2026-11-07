@@ -1,6 +1,6 @@
 import { CRITERIA, EXERCISES } from "./catalog";
 import { topsis } from "./topsis";
-import type { Criterion, Exercise, ExerciseStat, Focus, Goal, Muscle, Plan, PlanItem, Profile } from "./types";
+import type { BuildType, Criterion, Exercise, ExerciseStat, Focus, Goal, Muscle, Plan, PlanItem, Profile } from "./types";
 
 export const FOCUS_MUSCLES: Record<Focus, Muscle[]> = {
   core: ["core"],
@@ -22,6 +22,22 @@ export const FOCUS_LABELS: Record<Focus, string> = {
   upper: "Upper body",
   lower: "Lower body",
   full: "Full body",
+};
+
+export const BUILD_LABELS: Record<BuildType, string> = {
+  lean: "Lean & defined",
+  athletic: "Athletic",
+  bulk: "Bulked up",
+};
+
+export const AREA_LABELS: Record<Exclude<Muscle, "cardio">, string> = {
+  chest: "Chest",
+  back: "Back",
+  shoulders: "Shoulders",
+  arms: "Arms",
+  legs: "Legs",
+  glutes: "Glutes",
+  core: "Core",
 };
 
 export interface Context {
@@ -51,6 +67,9 @@ export function criteriaScores(ex: Exercise, ctx: Context, muscleOverride?: Musc
   let c2: number;
   if (muscleOverride) {
     c2 = ex.muscle === muscleOverride ? 5 : ex.secondary.includes(muscleOverride) ? 3 : 1;
+  } else if (profile.goal === "target_part" && profile.areas && profile.areas.length > 0) {
+    const areas = profile.areas;
+    c2 = areas.includes(ex.muscle) ? 5 : ex.secondary.some((m) => areas.includes(m)) ? 3 : 1;
   } else {
     const focus = FOCUS_MUSCLES[profile.focus];
     if (profile.focus === "full") c2 = ex.muscle === "cardio" || ex.secondary.length >= 2 ? 5 : 3;
@@ -86,7 +105,12 @@ const BASE_REPS: Record<Goal, number> = {
   body_build: 10,
 };
 
-export function prescribe(ex: Exercise, goal: Goal, level: number): Omit<PlanItem, "exerciseId" | "score"> {
+export function prescribe(
+  ex: Exercise,
+  goal: Goal,
+  level: number,
+  build?: BuildType,
+): Omit<PlanItem, "exerciseId" | "score"> {
   const sets = level >= 3.5 ? 4 : 3;
   if (ex.kind === "hold") {
     return { sets, target: Math.round(20 + 10 * level), restSec: 45 };
@@ -94,7 +118,12 @@ export function prescribe(ex: Exercise, goal: Goal, level: number): Omit<PlanIte
   let reps = BASE_REPS[goal] * (0.8 + 0.1 * level);
   const loaded = ex.requires.some((e) => ["dumbbells", "barbell", "kettlebell", "machines"].includes(e));
   if (loaded) reps *= 0.7;
-  const restSec = goal === "gain_muscle" ? 75 : goal === "lose_weight" ? 30 : 60;
+  let restSec = goal === "gain_muscle" ? 75 : goal === "lose_weight" ? 30 : 60;
+  if (goal === "body_build" && build) {
+    // Lean: higher reps, short rest. Bulk: fewer, heavier reps, long rest.
+    if (build === "lean") { reps *= 1.3; restSec = 40; }
+    else if (build === "bulk") { reps *= 0.8; restSec = 90; }
+  }
   return { sets, target: Math.max(4, Math.round(reps)), restSec };
 }
 
@@ -124,7 +153,7 @@ export function generatePlan(ctx: Context): Plan {
     items: picked.map((r) => ({
       exerciseId: r.exercise.id,
       score: Math.round(r.closeness * 100),
-      ...prescribe(r.exercise, ctx.profile.goal, ctx.level),
+      ...prescribe(r.exercise, ctx.profile.goal, ctx.level, ctx.profile.build),
     })),
   };
 }
@@ -160,7 +189,9 @@ export function planTitle(profile: Profile) {
   if (profile.goal === "lose_weight") return "Fat burn";
   if (profile.goal === "gain_muscle") return "Muscle builder";
   if (profile.goal === "build_abs") return "Core focus";
-  if (profile.goal === "body_build") return "Body build";
+  if (profile.goal === "body_build") return profile.build ? `${BUILD_LABELS[profile.build]} build` : "Body build";
+  if (profile.goal === "target_part" && profile.areas?.length)
+    return `${profile.areas.map((a) => AREA_LABELS[a as keyof typeof AREA_LABELS] ?? a).join(" + ")} focus`;
   return `${FOCUS_LABELS[profile.focus]} focus`;
 }
 

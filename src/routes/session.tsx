@@ -323,7 +323,7 @@ function SessionPage() {
 
       {/* Plank uses its dedicated posture tracker */}
       {ex.id === "plank" ? (
-        <PlankTracker />
+        <PlankTracker paused={phase !== "work"} />
       ) : ex.pose && !isHold ? (
         <PoseTracker
           poseKey={ex.pose}

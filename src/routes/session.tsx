@@ -282,7 +282,7 @@ function SessionPage() {
                 {decision.swapOut
                   .map((id) => findExercise(catalog, id)?.name ?? id)
                   .join(", ")}{" "}
-                — replaced with TOPSIS alternatives.
+                — replaced with alternative exercises.
               </li>
             )}
           </ul>
